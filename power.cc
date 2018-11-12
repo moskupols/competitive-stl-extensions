@@ -12,9 +12,10 @@ int64_t identity_element(decltype(mul)) {
 }
 
 using Permutation = vector<size_t>;
-
+size_t ApplyPermCalls = 0;
 struct ApplyPerm {
   Permutation operator()(const Permutation& a, const Permutation& b) const {
+    ++ApplyPermCalls;
     Permutation result(a.size());
     for (size_t i = 0; i < result.size(); ++i) {
       result[i] = a[b[i]];
@@ -32,7 +33,6 @@ Permutation identity_element(ApplyPerm apply) {
 }
 
 using Matrix = vector<vector<double>>;
-
 size_t matrixSize;
 auto mul_matrix = [](const Matrix& a, const Matrix& b) {
   Matrix result(matrixSize, vector<double>(matrixSize, 0));
@@ -62,6 +62,7 @@ int main() {
     cout << x << ' ';
   }
   cout << '\n';
+  cout << "calls: " << ApplyPermCalls << '\n';
 
   {
     Matrix init{

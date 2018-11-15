@@ -59,8 +59,8 @@
 \subsection{Standard library}
 \begin{frame}[fragile]{Standard library}
   \begin{itemize}
-    \item \mintinline{c++}|#include <bits/stdc++.h>|
-    \item \mintinline{c++}|std::__gcd| from \mintinline{c++}|<algorithm>|
+    \item<1-> \mintinline{c++}|#include <bits/stdc++.h>|
+    \item<2-> \mintinline{c++}|std::__gcd| from \mintinline{c++}|<algorithm>|
   \end{itemize}
 \end{frame}
 
@@ -81,8 +81,12 @@
 \end{frame}
 
 \subsection{SGI STL extensions}
-\begin{frame}{Kool tricks: SGI STL extensions}
-  power
+
+\begin{frame}[fragile]{SGI STL extensions: power}
+  \inputminted{c++}{power_modulo.cc}
+\end{frame}
+
+\begin{frame}{SGI STL extensions: power}
   rope
 \end{frame}
 

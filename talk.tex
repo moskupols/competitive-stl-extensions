@@ -1,0 +1,99 @@
+\documentclass[12pt,notes,hyperref={unicode},aspectratio=169]{beamer}
+% \documentclass[12pt,presentation,hyperref={unicode},aspectratio=169]{beamer}
+%\includeonlyframes{test}
+\usepackage[utf8]{inputenc}
+
+\usepackage[russian]{babel}
+\usepackage{forloop}
+\usepackage{multirow}
+
+\usepackage{minted}
+
+\usepackage{amsmath,hyperref,multimedia, bbold, amssymb}
+
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+\mode<presentation>
+\usetheme{default}
+
+\subtitle{Meeting C++ 2018}
+\title{Competitive STL Extensions}
+\author{Fedor Alekseev}
+\institute{Moscow IPT: My pity}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  \note{
+    Good evening everyone!
+    Thanks for having me.
+    My name is Fedor.
+    I'm a student from Moscow.
+
+    I'm also doing some competitive programming as a hobby.
+    I have a team called My pity.
+  }
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Competitive Programming}
+\begin{frame}{Competitive Programming}
+\end{frame}
+
+\begin{frame}{Competitive Programming}
+  Engineering is Programming integrated over time?
+\end{frame}
+
+\section{Kool tricks}
+
+\subsection{Standard library}
+\begin{frame}[fragile]{Standard library}
+  \begin{itemize}
+    \item \mintinline{c++}|#include <bits/stdc++.h>|
+    \item \mintinline{c++}|std::__gcd| from \mintinline{c++}|<algorithm>|
+  \end{itemize}
+\end{frame}
+
+\subsection{g++ builtins}
+
+\begin{frame}[fragile]{popcount: number of set bits}
+  \inputminted{c++}{popcnt.cc}
+  godbolts to
+  \inputminted{asm}{popcnt.asm}
+\end{frame}
+
+\begin{frame}[fragile]{ctz: Count Trailing Zeros}
+  \inputminted{c++}{ctz.cc}
+  godbolts to
+  \inputminted{asm}{ctz.asm}
+
+  Also \mintinline{c++}|__builtin_clz(int)| counts leading zeros
+\end{frame}
+
+\subsection{SGI STL extensions}
+\begin{frame}{Kool tricks: SGI STL extensions}
+  power
+  rope
+\end{frame}
+
+\subsection{Policy-Based Data Structures}
+\begin{frame}{Kool tricks: pbds order statistics tree}
+\end{frame}
+
+\begin{frame}{pbds gp hash table}
+\end{frame}
+
+\begin{frame}{kthxbye}
+\end{frame}
+
+\end{document}

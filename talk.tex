@@ -47,11 +47,10 @@
     My name is Fedor.
     I'm a student from Moscow.
 
-    I'm also doing some competitive programming as a hobby.
-    I am a member of university team called My pity.
-
-    This talk will be about some non-standard library tools that are available
-    for g++ users and that are especially valuable for competitive programmers
+    I've been doing some competitive programming lately.
+    In this talk I will briefly describe what programming contest use, and
+    what parts of GNU C++ library we use to save precious minutes during a
+    contest.
   }
 \end{frame}
 
@@ -62,26 +61,38 @@
 \section{Competitive Programming}
 
 \begin{frame}{Competitive Programming}
-  \note{
-    So, during a programming contest you are usually given a set of
-    well-defined algorithmic problems.
-    You or your team are usually given 4 to 12 problems and 2 to 5 hours to solve them.
-    For each problem, you have to come up with a correct solution, and then
-    code it and submit the source code to the judging system.
-  }
 
   \begin{block}{A contest}
     \begin{itemize}
       \item<1-> Participants receive a set of 4--12 problems, and have just
         2--5 hours
+        \note{
+          So, competitive programming usually happens in the form of a contest.
+          In the beginning of a contest you are given a set of 4 to 12 problems and
+          just 2 to 5 hours to solve them.
+        }
+
       \item<2-> Problems are well-defined and usually have computer science
         nature
-      \item<3-> Solving a problem means sending a program to the judging system.
+
+      \item<2-> Solving a problem means sending a program to the judging system.
         The program should pass all the secret test cases within time limit
-      \item<4-> Optimal algorithmic complexity is usually enough, especially for
-        C++ solutions
-      \item<5-> Solutions are compiled in a judging environment without any
+        \note{
+          For each problem, you have to come up with a correct solution,
+          implement it and submit the source code to the judging system.
+        }
+
+      \item<3-> Optimal algorithmic complexity is usually enough, especially for
+        C++
+        \note{
+          Solution should be fast in terms of algorithmic complexity.
+        }
+
+      \item<4-> Solutions are compiled in a judging environment without any
         additional libraries, with just the stock compiler installation
+        \note{
+          But if your solution requires something 
+        }
     \end{itemize}
   \end{block}
 \end{frame}
@@ -97,6 +108,7 @@
   \begin{itemize}
     \item<1-> Algorithms: \mintinline{c++}|sort, lower_bound, unique, next_permutation,|~etc
     \item<1-> Data structures: \mintinline{bash}|{unordered_,}{set,map}|,
+      bitset,
       simpler containers
     \item<2-> GNU C++ specific:
     % \begin{itemize}
@@ -132,19 +144,23 @@
   \begin{itemize}
     \item<1-> Sometimes you have an operation $(a^n)$ that can be
       expressed as some other operation $(a \cdot a)$ repeated $n$ times
+
     \item<1-> This is usually called exponentiation
 
     \item<2-> Matrix exponentiation:
       $A^n = E
         \cdot \underbrace{A \cdot A \cdot \ldots \cdot A}_{n \text{ times}}$,
         where $E$ is identity matrix
-    \item<2-> Integer exponentiation over a modulus: $$
+
+    \item<2-> Modular exponentiation: $$
       a^n \mod{p} = 1
       \cdot \underbrace{(((a \mod{p}) \cdot a \mod{p}) \cdot
       \ldots \cdot a \mod{p})}_{n\text{ multiplications modulo }p}
     $$
 
-    \item<3-> If multiplication is associative, this can be done in just
+    \item<3-> std::pow does usual multiplication of real numbers only
+
+    \item<3-> If multiplication is associative, this still can be done in just
       $O(\log{n})$ multiplications
   \end{itemize}
 \end{frame}

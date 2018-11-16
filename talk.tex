@@ -22,12 +22,16 @@
 \mode<presentation>
 \usetheme{default}
 \usecolortheme{beaver}
-\setbeamertemplate{navigation symbols}{}  % remove navigation symbols
+\setbeamertemplate{navigation symbols}{
+  {\small
+    \insertframenumber/\inserttotalframenumber
+  }
+}
 
 \subtitle{Meeting C++ 2018}
 \title{Competitive STL Extensions}
 \author{Fedor Alekseev}
-\institute{Moscow Institute of Physics and Technology, My pity}
+\institute{Moscow Institute of Physics and Technology: My pity}
 \date{\today}
 
 \newmintedfile[cppfile]{c++}{linenos}
@@ -74,7 +78,7 @@
       \item<2-> Problems are well-defined and usually have computer science
         nature
       \item<3-> Solving a problem means sending a program to the judging system.
-        The program should pass all the secret test cases within some known limit
+        The program should pass all the secret test cases within time limit
       \item<4-> Optimal algorithmic complexity is usually enough, especially for
         C++ solutions
       \item<5-> Solutions are compiled in a judging environment without any
@@ -93,13 +97,16 @@
 \begin{frame}[fragile]{Standard library}
   \begin{itemize}
     \item<1-> Algorithms: \mintinline{c++}|sort, lower_bound, unique, next_permutation,|~etc
-    \item<1-> Data structures: \mintinline{bash}|{unordered_,}{set,map}|
-    \item<2-> libstdc++ specifics:
-    \begin{itemize}
-      \item<3-> \mintinline{c++}|#include <algorithm>| includes
-        \mintinline{c++}|std::__gcd|, even in pre-C++17 mode
-      \item<4-> \mintinline{c++}|#include <bits/stdc++.h>| includes everything!
-    \end{itemize}
+    \item<1-> Data structures: \mintinline{bash}|{unordered_,}{set,map}|,
+      simpler containers
+    \item<2-> GNU C++ specific:
+    % \begin{itemize}
+      % \item<3->
+      %   \mintinline{c++}|#include <algorithm>| includes
+      %   \mintinline{c++}|std::__gcd|, even in pre-C++17 mode
+      % \item<4->
+        \mintinline{c++}|#include <bits/stdc++.h>| includes everything!
+    % \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -109,14 +116,9 @@
   \cppfile{popcnt.cc}
   godbolts under x86 to
   \asmfile{popcnt.asm}
-\end{frame}
-
-\begin{frame}[fragile]{ctz: Count Trailing Zeros}
-  \cppfile{ctz.cc}
-  godbolts to
-  \asmfile{ctz.asm}
-
-  Similarly, \mintinline{c++}|__builtin_clz(int)| counts leading zeros
+  Similarly,
+  \mintinline{c++}|__builtin_clz| and \mintinline{c++}|__builtin_ctz|
+  count leading/trailing zeros
 \end{frame}
 
 \subsection{SGI STL extensions}
@@ -126,6 +128,24 @@
 %     \cppfile[firstline=70,lastline=74,autogobble]{/usr/include/c++/8.2.1/ext/numeric}
 %   \end{block}
 % \end{frame}
+
+\begin{frame}{SGI STL extensions: power}
+  \begin{itemize}
+    \item<1-> Sometimes you have an operation $(a^n)$ that can be
+      expressed as some other operation $(a \cdot a)$ repeated $n$ times
+    \item<2-> This is usually called exponentiation
+    \item<3-> Matrix exponentiation:
+      $A^n = E
+        \cdot \underbrace{A \cdot A \cdot \ldots \cdot A}_{n \text{ times}}$,
+        where $E$ is identity matrix
+    \item<4-> Integer exponentiation with modulo: $$
+      a^n \mod{p} = 1
+      \cdot \underbrace{(((a \mod{p}) \cdot a \mod{p}) \cdot
+      \ldots \cdot a \mod{p})}_{n\text{ times }a}
+    $$
+    \item<5-> Can be done in just $O(\log{n})$ multiplications
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{SGI STL extensions: power}
   \cppfile[mathescape]{power_modulo.cc}
@@ -143,7 +163,7 @@
       standard library, but with different trade-offs and possibilities
     \item<2-> Policy-Based Data Structures library is an attempt to express
       some of this variety
-    \item<3-> Shipped with libstdc++ as an extension within namespace
+    \item<3-> Shipped with GNU C++ library as an extension within namespace
       \mintinline{c++}|__gnu_pbds|
   \end{itemize}
 \end{frame}
@@ -151,8 +171,9 @@
 \begin{frame}[fragile]{PBDS: order statistics tree}
   \note{
     std::set is cool: it implements a dynamic sorted sequence.
-    The problem is that, well, although the order of this sequence is deterministic,
-    and you even have fast access to the elements in the middle of the sequence.
+    The problem is that, well, although the order of this sequence is
+    deterministic, and you even have fast access to the elements in the middle
+    of the sequence.
     That is, by-value access.
   }
   \cppfile[firstline=1,lastline=12]{order_statistics.cc}
@@ -162,7 +183,7 @@
 
 \begin{frame}{Lacking utilities}
   \begin{itemize}
-    \item<1-> C++ and libstdc++ are great tools for competitive programming, but
+    \item<1-> C++ is a great choice for competitive programming, but
     \item<2-> There are some lacking utilities that still tamper its dominance
     \item<3-> Most importantly, arbitrary precision arithmetics:
       although problems requiring it are quite rare, sometimes it is easier to
@@ -173,8 +194,10 @@
 \begin{frame}{kthxbye}
   \begin{itemize}
     \item Thanks!
-    \item More examples are available on my github \url{https://github.com/moskupols/competitive-stl-extensions}
-    \item For more info on PBDS see libstdc++ manual: \url{https://goo.gl/PmR86Z}
+    \item More examples are available on my github
+      \url{https://github.com/moskupols/competitive-stl-extensions}
+    \item For more info on PBDS see GNU C++ library manual:
+      \url{https://goo.gl/PmR86Z}
   \end{itemize}
 \end{frame}
 

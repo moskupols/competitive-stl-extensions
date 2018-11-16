@@ -1,4 +1,4 @@
-all:
+pdf:
 	latexmk -pdf -shell-escape talk
 
 check:

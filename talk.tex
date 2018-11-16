@@ -1,15 +1,16 @@
-\documentclass[12pt,notes,hyperref={unicode},aspectratio=169]{beamer}
-% \documentclass[12pt,presentation,hyperref={unicode},aspectratio=169]{beamer}
+% \documentclass[12pt,notes,hyperref={unicode},aspectratio=169]{beamer}
+\documentclass[12pt,presentation,hyperref={unicode},aspectratio=169]{beamer}
 %\includeonlyframes{test}
 \usepackage[utf8]{inputenc}
 
-\usepackage[russian]{babel}
+\usepackage[english]{babel}
 \usepackage{forloop}
 \usepackage{multirow}
 
-\usepackage{minted}
-
 \usepackage{amsmath,hyperref,multimedia, bbold, amssymb}
+
+\usepackage{minted}
+\usepackage{wrapfig, multicol}
 
 % \AtBeginSection[]
 % {
@@ -20,12 +21,17 @@
 
 \mode<presentation>
 \usetheme{default}
+\usecolortheme{beaver}
+\setbeamertemplate{navigation symbols}{}  % remove navigation symbols
 
 \subtitle{Meeting C++ 2018}
 \title{Competitive STL Extensions}
 \author{Fedor Alekseev}
-\institute{Moscow IPT: My pity}
-\date{}
+\institute{Moscow Institute of Physics and Technology, My pity}
+\date{\today}
+
+\newmintedfile[cppfile]{c++}{linenos}
+\newmintedfile{asm}{linenos}
 
 \begin{document}
 
@@ -44,60 +50,132 @@
 
 \begin{frame}{Outline}
   \tableofcontents
+  \note{
+    This talk will be about some non-standard library tools that are available
+    for g++ users and that are especially valuable for competitive programmers.
+  }
 \end{frame}
 
 \section{Competitive Programming}
-\begin{frame}{Competitive Programming}
-\end{frame}
 
 \begin{frame}{Competitive Programming}
-  Engineering is Programming integrated over time?
+  \note{
+    So, during a programming contest you are usually given a set of
+    well-defined algorithmic problems.
+    You or your team are usually given 4 to 12 problems and 2 to 5 hours to solve them.
+    For each problem, you have to come up with a correct solution, and then
+    code it and submit the source code to the judging system.
+  }
+
+  \begin{block}{A contest}
+    \begin{itemize}
+      \item<1-> Participants receive a set of 4 to 12 problems, and they have 2
+        to 5 hours to solve them.
+      \item<2-> Problems are well-defined and usually have computer science
+        nature
+      \item<3-> Solving a problem means sending a program to the judging system.
+        The program should pass all the secret test cases within some known limit
+      \item<4-> Optimal algorithmic complexity is usually enough, especially for
+        C++ solutions
+      \item<5-> Solutions are compiled in a judging environment without any
+        additional libraries, with just a vanilla compiler installation.
+    \end{itemize}
+  \end{block}
 \end{frame}
+
+% \begin{frame}{Competitive Programming}
+%   Engineering is Programming integrated over time?
+% \end{frame}
 
 \section{Kool tricks}
 
 \subsection{Standard library}
 \begin{frame}[fragile]{Standard library}
   \begin{itemize}
-    \item<1-> \mintinline{c++}|#include <bits/stdc++.h>|
-    \item<2-> \mintinline{c++}|std::__gcd| from \mintinline{c++}|<algorithm>|
+    \item<1-> Algorithms: \mintinline{c++}|sort, lower_bound, unique, next_permutation,|~etc
+    \item<1-> Data structures: \mintinline{bash}|{unordered_,}{set,map}|
+    \item<2-> libstdc++ specifics:
+    \begin{itemize}
+      \item<3-> \mintinline{c++}|#include <algorithm>| includes
+        \mintinline{c++}|std::__gcd|, even in pre-C++17 mode
+      \item<4-> \mintinline{c++}|#include <bits/stdc++.h>| includes everything!
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
 \subsection{g++ builtins}
 
 \begin{frame}[fragile]{popcount: number of set bits}
-  \inputminted{c++}{popcnt.cc}
-  godbolts to
-  \inputminted{asm}{popcnt.asm}
+  \cppfile{popcnt.cc}
+  godbolts under x86 to
+  \asmfile{popcnt.asm}
 \end{frame}
 
 \begin{frame}[fragile]{ctz: Count Trailing Zeros}
-  \inputminted{c++}{ctz.cc}
+  \cppfile{ctz.cc}
   godbolts to
-  \inputminted{asm}{ctz.asm}
+  \asmfile{ctz.asm}
 
-  Also \mintinline{c++}|__builtin_clz(int)| counts leading zeros
+  Similarly, \mintinline{c++}|__builtin_clz(int)| counts leading zeros
 \end{frame}
 
 \subsection{SGI STL extensions}
 
+% \begin{frame}[fragile]{SGI STL extensions: power}
+%   \begin{block}{ext/numeric}
+%     \cppfile[firstline=70,lastline=74,autogobble]{/usr/include/c++/8.2.1/ext/numeric}
+%   \end{block}
+% \end{frame}
+
 \begin{frame}[fragile]{SGI STL extensions: power}
-  \inputminted{c++}{power_modulo.cc}
+  \cppfile[mathescape]{power_modulo.cc}
 \end{frame}
 
-\begin{frame}{SGI STL extensions: power}
-  rope
-\end{frame}
+% \begin{frame}{SGI STL extensions: rope}
+%   rope?
+% \end{frame}
 
 \subsection{Policy-Based Data Structures}
-\begin{frame}{Kool tricks: pbds order statistics tree}
+
+\begin{frame}[fragile]{Policy-Based Data Structures}
+  \begin{itemize}
+    \item<1-> There are data structures fundamentally similar to these in the
+      standard library, but with different trade-offs and possibilities
+    \item<2-> Policy-Based Data Structures library is an attempt to express
+      some of this variety
+    \item<3-> Shipped with libstdc++ as an extension within namespace
+      \mintinline{c++}|__gnu_pbds|
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{pbds gp hash table}
+\begin{frame}[fragile]{PBDS: order statistics tree}
+  \note{
+    std::set is cool: it implements a dynamic sorted sequence.
+    The problem is that, well, although the order of this sequence is deterministic,
+    and you even have fast access to the elements in the middle of the sequence.
+    That is, by-value access.
+  }
+  \cppfile[firstline=1,lastline=12]{order_statistics.cc}
+\end{frame}
+
+\section{Lacking utilities}
+
+\begin{frame}{Lacking utilities}
+  \begin{itemize}
+    \item<1-> C++ and libstdc++ are great tools for competitive programming, but
+    \item<2-> There are some lacking utilities that still tamper its dominance
+    \item<3-> Most importantly, arbitrary precision arithmetics:
+      although problems requiring it are quite rare, sometimes it is easier to
+      switch to python or java just for big integers.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{kthxbye}
+  \begin{itemize}
+    \item Thanks!
+    \item More examples are available on my github \url{https://github.com/moskupols/competitive-stl-extensions}
+    \item For more info on PBDS see libstdc++ manual: \url{https://goo.gl/PmR86Z}
+  \end{itemize}
 \end{frame}
 
 \end{document}

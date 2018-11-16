@@ -48,17 +48,16 @@
     I'm a student from Moscow.
 
     I'm also doing some competitive programming as a hobby.
-    I have a team called My pity.
+    I am a member of university team called My pity.
+
+    This talk will be about some non-standard library tools that are available
+    for g++ users and that are especially valuable for competitive programmers
   }
 \end{frame}
 
-\begin{frame}{Outline}
-  \tableofcontents
-  \note{
-    This talk will be about some non-standard library tools that are available
-    for g++ users and that are especially valuable for competitive programmers.
-  }
-\end{frame}
+% \begin{frame}{Outline}
+%   \tableofcontents
+% \end{frame}
 
 \section{Competitive Programming}
 
@@ -73,8 +72,8 @@
 
   \begin{block}{A contest}
     \begin{itemize}
-      \item<1-> Participants receive a set of 4 to 12 problems, and they have 2
-        to 5 hours to solve them.
+      \item<1-> Participants receive a set of 4--12 problems, and have just
+        2--5 hours
       \item<2-> Problems are well-defined and usually have computer science
         nature
       \item<3-> Solving a problem means sending a program to the judging system.
@@ -82,7 +81,7 @@
       \item<4-> Optimal algorithmic complexity is usually enough, especially for
         C++ solutions
       \item<5-> Solutions are compiled in a judging environment without any
-        additional libraries, with just a vanilla compiler installation.
+        additional libraries, with just the stock compiler installation
     \end{itemize}
   \end{block}
 \end{frame}
@@ -133,17 +132,20 @@
   \begin{itemize}
     \item<1-> Sometimes you have an operation $(a^n)$ that can be
       expressed as some other operation $(a \cdot a)$ repeated $n$ times
-    \item<2-> This is usually called exponentiation
-    \item<3-> Matrix exponentiation:
+    \item<1-> This is usually called exponentiation
+
+    \item<2-> Matrix exponentiation:
       $A^n = E
         \cdot \underbrace{A \cdot A \cdot \ldots \cdot A}_{n \text{ times}}$,
         where $E$ is identity matrix
-    \item<4-> Integer exponentiation with modulo: $$
+    \item<2-> Integer exponentiation over a modulus: $$
       a^n \mod{p} = 1
       \cdot \underbrace{(((a \mod{p}) \cdot a \mod{p}) \cdot
-      \ldots \cdot a \mod{p})}_{n\text{ times }a}
+      \ldots \cdot a \mod{p})}_{n\text{ multiplications modulo }p}
     $$
-    \item<5-> Can be done in just $O(\log{n})$ multiplications
+
+    \item<3-> If multiplication is associative, this can be done in just
+      $O(\log{n})$ multiplications
   \end{itemize}
 \end{frame}
 
@@ -159,42 +161,61 @@
 
 \begin{frame}[fragile]{Policy-Based Data Structures}
   \begin{itemize}
-    \item<1-> There are data structures fundamentally similar to these in the
-      standard library, but with different trade-offs and possibilities
-    \item<2-> Policy-Based Data Structures library is an attempt to express
-      some of this variety
-    \item<3-> Shipped with GNU C++ library as an extension within namespace
+    \item<1-> Policy-Based Data Structures library implements several types of
+      search trees, hash tables, and heaps in an extensible way.
+    \item<2-> Shipped with GNU C++ library as an
+      extension within namespace
       \mintinline{c++}|__gnu_pbds|
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{PBDS: order statistics tree}
-  \note{
-    std::set is cool: it implements a dynamic sorted sequence.
-    The problem is that, well, although the order of this sequence is
-    deterministic, and you even have fast access to the elements in the middle
-    of the sequence.
-    That is, by-value access.
-  }
+\begin{frame}{PBDS: order statistics tree}
+  \begin{itemize}
+    \item<1->
+      Usual std::set maintains a dynamic sorted sequence.
+      It has methods like
+      \mint{c++}|iterator set<T>::lower_bound(const T&) const|
+      but no methods like
+      \mint{c++}|iterator set<T>::at(size_t) const|
+
+    \item<2->
+      Efficient ($O(\log{n})$) implementation of these methods would require
+      maintaining additional information in the search tree nodes
+
+    \item<3->
+      \mintinline{c++}|__gnu_pbds::tree_order_statistics_node_update|
+      is a tree update policy that does exactly that, and enables
+      methods
+      \mint{c++}|tree::iterator tree::find_by_order(size_t) const|
+      and
+      \mint{c++}|size_t tree::order_of_key(const T&) const|
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PBDS: order statistics tree declaration}
   \cppfile[firstline=1,lastline=12]{order_statistics.cc}
+\end{frame}
+
+\begin{frame}[fragile]{PBDS: order statistics tree usage}
+  \cppfile[firstline=15,lastline=27]{order_statistics.cc}
 \end{frame}
 
 \section{Lacking utilities}
 
 \begin{frame}{Lacking utilities}
   \begin{itemize}
-    \item<1-> C++ is a great choice for competitive programming, but
-    \item<2-> There are some lacking utilities that still tamper its dominance
-    \item<3-> Most importantly, arbitrary precision arithmetics:
-      although problems requiring it are quite rare, sometimes it is easier to
-      switch to python or java just for big integers.
+    \item<1-> C++ is a great language for competitive programming, but
+    \item<2-> There are some lacking utilities that still constrain its dominance
+    \item<3-> Most notably, arbitrary precision arithmetics:
+      sometimes it is pragmatic to switch to Python or Java just for big
+      integers
   \end{itemize}
 \end{frame}
 
 \begin{frame}{kthxbye}
   \begin{itemize}
     \item Thanks!
-    \item More examples are available on my github
+    \item More examples:
       \url{https://github.com/moskupols/competitive-stl-extensions}
     \item For more info on PBDS see GNU C++ library manual:
       \url{https://goo.gl/PmR86Z}
